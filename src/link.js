@@ -74,20 +74,19 @@ export const changeLocale = ({ language, to, withHash }) => {
     return pathname.substring(i)
   }
 
+  const pathname = to || removeLocalePart(removePrefix(window.location.pathname))
   let browserSearch = window.location.search
+  let link
 
   if (withHash) {
     const parseQueryString = qs.parse(window.location.search)
     const newQueryString = { lang: language, ...parseQueryString}
     const queryToString = qs.stringify(newQueryString)
 
-    browserSearch = queryToString
-  }
+    browserSearch = `?${queryToString}`
+    link = `${pathname}${browserSearch}`
+  } else link = `/${language}${pathname}${browserSearch}`
 
-  const pathname =
-    to || removeLocalePart(removePrefix(window.location.pathname))
-  // TODO: check slash
-  const link = `/${language}${pathname}${browserSearch}`
   localStorage.setItem("gatsby-intl-language", language)
   gatsbyNavigate(link)
 }
