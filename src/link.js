@@ -1,6 +1,8 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { Link as GatsbyLink, navigate as gatsbyNavigate } from "gatsby"
+import qs from "query-string";
+
 import { IntlContextConsumer } from "./intl-context"
 
 const Link = ({ to, language, children, onClick, ...rest }) => (
@@ -49,7 +51,7 @@ export const navigate = (to, options) => {
   gatsbyNavigate(link, options)
 }
 
-export const changeLocale = (language, to) => {
+export const changeLocale = ({ language, to, withHash }) => {
   if (typeof window === "undefined") {
     return
   }
@@ -72,10 +74,20 @@ export const changeLocale = (language, to) => {
     return pathname.substring(i)
   }
 
+  let browserSearch = window.location.search
+
+  if (withHash) {
+    const parseQueryString = qs.parse(window.location.search)
+    const newQueryString = { lang: language, ...parseQueryString}
+    const queryToString = qs.stringify(newQueryString)
+
+    browserSearch = queryToString
+  }
+
   const pathname =
     to || removeLocalePart(removePrefix(window.location.pathname))
   // TODO: check slash
-  const link = `/${language}${pathname}${window.location.search}`
+  const link = `/${language}${pathname}${browserSearch}`
   localStorage.setItem("gatsby-intl-language", language)
   gatsbyNavigate(link)
 }
