@@ -49,6 +49,7 @@ exports.onCreatePage = async ({ page, actions }, pluginOptions) => {
     languages = ["en"],
     defaultLanguage = "en",
     redirect = false,
+    withHash = false
   } = pluginOptions
 
   const getMessages = (path, language) => {
@@ -85,6 +86,7 @@ exports.onCreatePage = async ({ page, actions }, pluginOptions) => {
           routed,
           originalPath: page.path,
           redirect,
+          withHash,
           defaultLanguage,
         },
       },

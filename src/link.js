@@ -51,11 +51,10 @@ export const navigate = (to, options) => {
   gatsbyNavigate(link, options)
 }
 
-export const changeLocale = ({ language, to, withHash }) => {
-  if (typeof window === "undefined") {
-    return
-  }
-  const { routed } = window.___gatsbyIntl
+export const changeLocale = (language) => {
+  if (typeof window === "undefined") return
+
+  const { routed, withHash } = window.___gatsbyIntl
 
   const removePrefix = pathname => {
     const base =

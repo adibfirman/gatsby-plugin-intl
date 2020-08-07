@@ -2,6 +2,7 @@ import React from "react"
 import browserLang from "browser-lang"
 import { withPrefix } from "gatsby"
 import { IntlProvider } from "react-intl"
+import qs from "query-string";
 import { IntlContextProvider } from "./intl-context"
 
 const preferDefault = m => (m && m.default) || m
@@ -44,7 +45,7 @@ export default ({ element, props }, pluginOptions) => {
   const { pageContext, location } = props
   const { defaultLanguage } = pluginOptions
   const { intl } = pageContext
-  const { language, languages, redirect, routed, originalPath } = intl
+  const { language, languages, redirect, routed, originalPath, withHash } = intl
 
   if (typeof window !== "undefined") {
     window.___gatsbyIntl = intl
@@ -73,7 +74,29 @@ export default ({ element, props }, pluginOptions) => {
       window.localStorage.setItem("gatsby-intl-language", detected)
       window.location.replace(newUrl)
     }
+  } else if (withHash) {
+    const { search } = location
+
+    // Skip build, Browsers only
+    if (typeof window !== "undefined") {
+      let detected =
+        window.localStorage.getItem("gatsby-intl-language") ||
+        browserLang({
+          languages,
+          fallback: language,
+        })
+
+      if (!languages.includes(detected)) {
+        detected = language
+      }
+
+      const queryParams = qs.stringify({ lang: detected, ...qs.parse(search) })
+      const newUrl = withPrefix(`/${originalPath}?${queryParams}`)
+      window.localStorage.setItem("gatsby-intl-language", detected)
+      window.location.replace(newUrl)
+    }   
   }
+
   const renderElement = isRedirect
     ? GATSBY_INTL_REDIRECT_COMPONENT_PATH &&
       React.createElement(
