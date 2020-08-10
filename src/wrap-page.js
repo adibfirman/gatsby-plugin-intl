@@ -102,7 +102,7 @@ export default ({ element, props }, pluginOptions) => {
     }   
   }
 
-  const renderElement = isRedirect
+  const renderElement = (isRedirect || withHash)
     ? GATSBY_INTL_REDIRECT_COMPONENT_PATH &&
       React.createElement(
         preferDefault(require(GATSBY_INTL_REDIRECT_COMPONENT_PATH))

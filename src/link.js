@@ -51,7 +51,7 @@ export const navigate = (to, options) => {
   gatsbyNavigate(link, options)
 }
 
-export const changeLocale = (language) => {
+export const changeLocale = (language, to) => {
   if (typeof window === "undefined") return
 
   const { routed, withHash } = window.___gatsbyIntl
