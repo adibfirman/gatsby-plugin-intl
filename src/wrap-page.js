@@ -90,10 +90,15 @@ export default ({ element, props }, pluginOptions) => {
         detected = language
       }
 
-      const queryParams = qs.stringify({ lang: detected, ...qs.parse(search) })
-      const newUrl = withPrefix(`/${originalPath === '/' ? '' : originalPath}?${queryParams}`)
+      const queryParams = new URLSearchParams(window.location.search)
+      queryParams.set('lang', detected)
+
+      history.replaceState(null, null, `?${queryParams.toString()}`)
       window.localStorage.setItem("gatsby-intl-language", detected)
-      window.location.replace(newUrl)
+
+      // const queryParams = qs.stringify({ lang: detected, ...qs.parse(search) })
+      // const newUrl = withPrefix(`/${originalPath === '/' ? '' : originalPath}?${queryParams}`)
+      // window.location.replace(newUrl)
     }   
   }
 
